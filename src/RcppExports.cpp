@@ -5,18 +5,6 @@
 
 using namespace Rcpp;
 
-// fast_rnd_up
-NumericVector fast_rnd_up(NumericVector x, double granularity);
-RcppExport SEXP ppR_fast_rnd_up(SEXP xSEXP, SEXP granularitySEXP) {
-BEGIN_RCPP
-    Rcpp::RObject __result;
-    Rcpp::RNGScope __rngScope;
-    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
-    Rcpp::traits::input_parameter< double >::type granularity(granularitySEXP);
-    __result = Rcpp::wrap(fast_rnd_up(x, granularity));
-    return __result;
-END_RCPP
-}
 // fast_rnd_down
 NumericVector fast_rnd_down(NumericVector x, double granularity);
 RcppExport SEXP ppR_fast_rnd_down(SEXP xSEXP, SEXP granularitySEXP) {
@@ -26,6 +14,18 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
     Rcpp::traits::input_parameter< double >::type granularity(granularitySEXP);
     __result = Rcpp::wrap(fast_rnd_down(x, granularity));
+    return __result;
+END_RCPP
+}
+// fast_rnd_up
+NumericVector fast_rnd_up(NumericVector x, double granularity);
+RcppExport SEXP ppR_fast_rnd_up(SEXP xSEXP, SEXP granularitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< double >::type granularity(granularitySEXP);
+    __result = Rcpp::wrap(fast_rnd_up(x, granularity));
     return __result;
 END_RCPP
 }
