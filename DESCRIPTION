@@ -1,0 +1,10 @@
+Package: ppR
+Title: Make prior period summary variables from longitudinal data.
+Version: 0.1
+Authors@R: person("First", "Last", email = "dex.groves@gmail.com", role = c("aut", "cre"))
+Description: Methods to handle the creation and implementation of by-group mean and count variables for preceding records of the same group.
+Depends: R (>= 3.2.0), data.table, Rcpp, stringi
+Imports: data.table, Rcpp (>= 0.11.0)
+License: GPL (>= 2)
+LazyData: true
+LinkingTo: Rcpp
