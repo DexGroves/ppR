@@ -52,7 +52,8 @@ train_ppgrid <- function(id_var, time_var, response_var,
   max_score_pt <- fast_rnd_up(max(time_var), granularity) +
                     (buffer * granularity)
 
-  summary_table <- merge(starts_grid, train_dt, by = "time_var", all.y = TRUE)
+  summary_table <- merge(starts_grid, train_dt, by = "time_var",
+                         all.x = TRUE, allow.cartesian = TRUE)
   summary_table[is.na(response_var), response_var := 0]
   summary_table[is.na(response_var), wt_var := 0]
 
@@ -64,7 +65,6 @@ train_ppgrid <- function(id_var, time_var, response_var,
                                                               window_i),
                 by = id_var]
   summary_table[, score_pt := time_var + (buffer + window_i) * granularity]
-
 
   out <- list(dt = summary_table[score_pt <= max_score_pt,
                                  .(id_var,

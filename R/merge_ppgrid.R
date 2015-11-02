@@ -35,7 +35,7 @@ merge_ppgrid <- function(id_var, time_var, ppgrid, na_fill = FALSE) {
   }
 
   score_dt <- data.table(id_var,
-                         score_pt = round_down(time_var, ppgrid$granularity))
+                         score_pt = fast_rnd_down(time_var, ppgrid$granularity))
   score_dt[, ori_order := 1:.N]
 
   out_dt <- merge(score_dt, ppgrid$dt,
