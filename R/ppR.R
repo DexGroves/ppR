@@ -19,6 +19,5 @@
 #' @docType package
 #' @import data.table
 #' @import Rcpp
-#' @useDynLib Rcpp
 #' @useDynLib ppR
 NULL
