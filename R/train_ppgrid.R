@@ -46,6 +46,7 @@ train_ppgrid <- function(id_var, time_var, response_var,
   setkey(train_dt, time_var)
 
   starts_grid <- get_starts_table(time_var, granularity)
+
   buffer <- fast_rnd_up(lag, granularity) / granularity
   window_i <- fast_rnd_up(window_size, granularity) / granularity
   max_score_pt <- fast_rnd_up(max(time_var), granularity) +
@@ -54,6 +55,7 @@ train_ppgrid <- function(id_var, time_var, response_var,
   summary_table <- merge(starts_grid, train_dt, by = "time_var", all.y = TRUE)
   summary_table[is.na(response_var), response_var := 0]
   summary_table[is.na(response_var), wt_var := 0]
+
   setkey(summary_table, id_var, time_var)
 
   summary_table[, c("response", "wt") := fast_traverse_totals(response_var,
@@ -85,7 +87,6 @@ reduce_data <- function(train_dt, granularity) {
 
 get_starts_table <- function(time_var, granularity) {
   start <- fast_rnd_down(min(time_var), granularity)
-  # Fix this
   end   <- fast_rnd_up(max(time_var), granularity)
   data.table(time_var = seq(start, end, by = granularity),
              key = "time_var")

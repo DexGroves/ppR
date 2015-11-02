@@ -5,9 +5,9 @@ train_jit <- jit_data[date < 1100]
 test_jit  <- jit_data[date >= 1100]
 
 
-jit_grid <- train_ppgrid(train_jit$id, train_jit$date, train_jit$resp,
-                         lag = 10, window_size = 50,
-                         granularity = 25)
+  jit_grid <- train_ppgrid(train_jit$id, train_jit$date, train_jit$resp,
+                           lag = 10, window_size = 50,
+                           granularity = 25)
 
 test_that("merge_ppgrid working with na_fill.", {
   test_out <- merge_ppgrid(test_jit$id, test_jit$date, jit_grid, FALSE)
