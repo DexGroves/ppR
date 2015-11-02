@@ -52,12 +52,7 @@ train_ppgrid <- function(id_var, time_var, response_var,
   max_score_pt <- fast_rnd_up(max(time_var), granularity) +
                     (buffer * granularity)
 
-  summary_table <- merge(starts_grid, train_dt, by = "time_var",
-                         all.x = TRUE, allow.cartesian = TRUE)
-  summary_table[is.na(response_var), response_var := 0]
-  summary_table[is.na(response_var), wt_var := 0]
-
-  setkey(summary_table, id_var, time_var)
+  summary_table <- get_summary_table(starts_grid, train_dt)
 
   summary_table[, c("response", "wt") := fast_traverse_totals(response_var,
                                                               wt_var,
@@ -83,6 +78,16 @@ reduce_data <- function(train_dt, granularity) {
   train_dt[, .(response_var = fast_wtd_mean(response_var, wt_var),
                wt_var = sum(wt_var)),
            by = .(id_var, time_var = fast_rnd_down(time_var, granularity))]
+}
+
+get_summary_table <- function(starts_grid, train_dt) {
+  summary_table <- merge(starts_grid, train_dt, by = "time_var",
+                         all.x = TRUE, allow.cartesian = TRUE)
+  summary_table[is.na(response_var), response_var := 0]
+  summary_table[is.na(response_var), wt_var := 0]
+
+  setkey(summary_table, id_var, time_var)
+  summary_table
 }
 
 get_starts_table <- function(time_var, granularity) {
