@@ -9,9 +9,9 @@ test_that("Acting reasonably without weights.", {
                            lag = 10, window_size = 100, granularity = 50)
 
   expect_equal(round(jit_grid$dt$response, 4),
-                c(0.5287, 0.5336, 0.4784, 0.5171, 0.4756, 0.5096))
+                c(0.5287, 0.4784, 0.4756, 0.5336, 0.5171, 0.5096))
   expect_equal(jit_grid$dt$wt,
-                c(261, 253, 255, 263, 225, 261))
+                c(261, 255, 225, 253, 263, 261))
 
 
 })
@@ -22,8 +22,8 @@ test_that("Acting reasonably with weights.", {
                            granularity = 50)
 
   expect_equal(round(jit_grid$dt$response, 4),
-                c(0.5405, 0.5418, 0.4767, 0.5025, 0.4385, 0.5042))
+                c(0.5405, 0.4767, 0.4385, 0.5418, 0.5025, 0.5042))
   expect_equal(round(jit_grid$dt$wt, 4),
-                c(131.8131, 131.2385, 119.1166, 136.1911, 105.0173, 129.0213))
+                c(131.8131, 119.1166, 105.0173, 131.2385, 136.1911, 129.0213))
 
 })
