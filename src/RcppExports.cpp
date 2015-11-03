@@ -29,6 +29,20 @@ BEGIN_RCPP
     return __result;
 END_RCPP
 }
+// fast_traverse_totals
+List fast_traverse_totals(NumericVector x, NumericVector w, int buffer, int window);
+RcppExport SEXP ppR_fast_traverse_totals(SEXP xSEXP, SEXP wSEXP, SEXP bufferSEXP, SEXP windowSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject __result;
+    Rcpp::RNGScope __rngScope;
+    Rcpp::traits::input_parameter< NumericVector >::type x(xSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type w(wSEXP);
+    Rcpp::traits::input_parameter< int >::type buffer(bufferSEXP);
+    Rcpp::traits::input_parameter< int >::type window(windowSEXP);
+    __result = Rcpp::wrap(fast_traverse_totals(x, w, buffer, window));
+    return __result;
+END_RCPP
+}
 // fast_wtd_mean
 double fast_wtd_mean(NumericVector x, NumericVector w);
 RcppExport SEXP ppR_fast_wtd_mean(SEXP xSEXP, SEXP wSEXP) {

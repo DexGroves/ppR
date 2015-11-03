@@ -9,6 +9,10 @@ fast_rnd_up <- function(x, granularity) {
     .Call('ppR_fast_rnd_up', PACKAGE = 'ppR', x, granularity)
 }
 
+fast_traverse_totals <- function(x, w, buffer, window) {
+    .Call('ppR_fast_traverse_totals', PACKAGE = 'ppR', x, w, buffer, window)
+}
+
 fast_wtd_mean <- function(x, w) {
     .Call('ppR_fast_wtd_mean', PACKAGE = 'ppR', x, w)
 }
