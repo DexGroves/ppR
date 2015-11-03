@@ -1,7 +1,7 @@
 set.seed(1234)
 jit_data <- make_longitudinal_data(1000)
 
-jit_data_wt <- jit_data
+jit_data_wt <- copy(jit_data)
 jit_data_wt$wt <- runif(1000)
 
 test_that("Acting reasonably without weights.", {

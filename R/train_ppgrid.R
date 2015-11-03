@@ -40,26 +40,27 @@ train_ppgrid <- function(id_var, time_var, response_var,
                          wt_var = rep(1, length(response_var)),
                          lag, window_size, granularity) {
 
+  starts_grid <- get_starts_table(time_var, granularity)
+
+  buffer <- round_up(lag, granularity) / granularity
+  window_i <- round_up(window_size, granularity) / granularity
+  max_score_pt <- round_up(max(time_var), granularity) +
+                    (buffer * granularity)
+
   train_dt <- data.table(id_var, time_var, response_var, wt_var, key = "id_var")
+  fast_rnd_down(train_dt$time_var, granularity)
 
   train_dt <- reduce_data(train_dt, granularity)
   setkey(train_dt, time_var)
 
-  starts_grid <- get_starts_table(time_var, granularity)
-
-  buffer <- fast_rnd_up(lag, granularity) / granularity
-  window_i <- fast_rnd_up(window_size, granularity) / granularity
-  max_score_pt <- fast_rnd_up(max(time_var), granularity) +
-                    (buffer * granularity)
-
-  summary_table <- get_summary_table(starts_grid, train_dt)
+  summary_table <- get_summary_table(starts_grid, train_dt,
+                                     buffer, window_i, granularity)
 
   summary_table[, c("response", "wt") := fast_traverse_totals(response_var,
                                                               wt_var,
                                                               buffer,
                                                               window_i),
                 by = id_var]
-  summary_table[, score_pt := time_var + (buffer + window_i) * granularity]
 
   out <- list(dt = summary_table[score_pt <= max_score_pt,
                                  .(id_var,
@@ -77,14 +78,16 @@ train_ppgrid <- function(id_var, time_var, response_var,
 reduce_data <- function(train_dt, granularity) {
   train_dt[, .(response_var = fast_wtd_mean(response_var, wt_var),
                wt_var = sum(wt_var)),
-           by = .(id_var, time_var = fast_rnd_down(time_var, granularity))]
+           by = .(id_var, time_var)]
 }
 
-get_summary_table <- function(starts_grid, train_dt) {
+get_summary_table <- function(starts_grid, train_dt,
+                              buffer, window_i, granularity) {
   summary_table <- merge(starts_grid, train_dt, by = "time_var",
                          all.x = TRUE, allow.cartesian = TRUE)
   summary_table[is.na(response_var), response_var := 0]
   summary_table[is.na(response_var), wt_var := 0]
+  summary_table[, score_pt := time_var + (buffer + window_i) * granularity]
 
   setkey(summary_table, id_var, time_var)
   summary_table
