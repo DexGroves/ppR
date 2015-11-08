@@ -27,3 +27,22 @@ test_that("Acting reasonably with weights.", {
                 c(131.8131, 119.1166, 105.0173, 131.2385, 136.1911, 129.0213))
 
 })
+
+test_that("Working for a very simple example", {
+  d <- data.frame(id   = as.factor(c(rep("a", 5), rep("b", 5))),
+                  time = c(seq(1, 5), seq(1, 5)),
+                  resp = c(seq(10, 50, 10), seq(10, 50, 10)))
+
+
+  pp <- train_ppgrid(d$id, d$time, d$resp, lag = 1.0,
+                     window_size = 1.0, granularity = 1.0)
+
+  expected <- data.table(id_var   = as.factor(c(rep("a", 4),   rep("b", 4))),
+                         start_ge = c(seq(1, 4),   seq(1, 4)),
+                         end_lt   = c(seq(2, 5),   seq(2, 5)),
+                         response = c(seq(10, 40, 10), seq(10, 40, 10)),
+                         wt       = rep(1, 8),
+                         score_pt = c(seq(3, 6), seq(3, 6)))
+
+  expect_equal(pp$dt, expected)
+})

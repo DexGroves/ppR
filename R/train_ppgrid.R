@@ -36,9 +36,17 @@
 #'                        granularity = 25)
 #'
 #' print(ppgrid)
-train_ppgrid <- function(id_var, time_var, response_var,
+train_ppgrid <- function(id_var,
+                         time_var,
+                         response_var,
                          wt_var = rep(1, length(response_var)),
-                         lag, window_size, granularity) {
+                         lag,
+                         window_size,
+                         granularity) {
+
+  if (is.integer(time_var) & !is.integer(granularity)) {
+    time_var <- as.numeric(time_var)
+  }
 
   starts_grid <- get_starts_table(unique(id_var), time_var, granularity)
 
@@ -56,16 +64,14 @@ train_ppgrid <- function(id_var, time_var, response_var,
   summary_table <- get_summary_table(starts_grid, train_dt,
                                      buffer, window_i, granularity)
 
-  summary_table[, c("response", "wt") := fast_traverse_totals(response_var,
-                                                              wt_var,
-                                                              buffer,
-                                                              window_i),
+  summary_table[, c("response", "wt") :=
+                  fast_traverse_totals(response_var, wt_var, buffer, window_i),
                 by = id_var]
 
   out <- list(dt = summary_table[score_pt <= max_score_pt,
                                  .(id_var,
-                                   start = time_var,
-                                   end = time_var + window_i * granularity,
+                                   start_ge = time_var,
+                                   end_lt   = time_var + window_i * granularity,
                                    response, wt, score_pt)],
               time_max    = max_score_pt,
               window_size = window_size,
